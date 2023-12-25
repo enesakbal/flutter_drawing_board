@@ -93,45 +93,10 @@ class CanvasSideBar extends HookWidget {
                   tooltip: 'Pencil',
                 ),
                 _IconBox(
-                  selected: drawingMode.value == DrawingMode.line,
-                  onTap: () => drawingMode.value = DrawingMode.line,
-                  tooltip: 'Line',
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 22,
-                        height: 2,
-                        color: drawingMode.value == DrawingMode.line
-                            ? Colors.grey[900]
-                            : Colors.grey,
-                      ),
-                    ],
-                  ),
-                ),
-                _IconBox(
-                  iconData: Icons.hexagon_outlined,
-                  selected: drawingMode.value == DrawingMode.polygon,
-                  onTap: () => drawingMode.value = DrawingMode.polygon,
-                  tooltip: 'Polygon',
-                ),
-                _IconBox(
                   iconData: FontAwesomeIcons.eraser,
                   selected: drawingMode.value == DrawingMode.eraser,
                   onTap: () => drawingMode.value = DrawingMode.eraser,
                   tooltip: 'Eraser',
-                ),
-                _IconBox(
-                  iconData: FontAwesomeIcons.square,
-                  selected: drawingMode.value == DrawingMode.square,
-                  onTap: () => drawingMode.value = DrawingMode.square,
-                  tooltip: 'Square',
-                ),
-                _IconBox(
-                  iconData: FontAwesomeIcons.circle,
-                  selected: drawingMode.value == DrawingMode.circle,
-                  onTap: () => drawingMode.value = DrawingMode.circle,
-                  tooltip: 'Circle',
                 ),
               ],
             ),
@@ -151,28 +116,9 @@ class CanvasSideBar extends HookWidget {
               ],
             ),
 
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 150),
-              child: drawingMode.value == DrawingMode.polygon
-                  ? Row(
-                      children: [
-                        const Text(
-                          'Polygon Sides: ',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        Slider(
-                          value: polygonSides.value.toDouble(),
-                          min: 3,
-                          max: 8,
-                          onChanged: (val) {
-                            polygonSides.value = val.toInt();
-                          },
-                          label: '${polygonSides.value}',
-                          divisions: 5,
-                        ),
-                      ],
-                    )
-                  : const SizedBox.shrink(),
+            const AnimatedSwitcher(
+              duration: Duration(milliseconds: 150),
+              child: SizedBox.shrink(),
             ),
             const SizedBox(height: 10),
             const Text(
@@ -230,17 +176,14 @@ class CanvasSideBar extends HookWidget {
             Wrap(
               children: [
                 TextButton(
-                  onPressed: allSketches.value.isNotEmpty
-                      ? () => undoRedoStack.value.undo()
-                      : null,
+                  onPressed: allSketches.value.isNotEmpty ? () => undoRedoStack.value.undo() : null,
                   child: const Text('Undo'),
                 ),
                 ValueListenableBuilder<bool>(
                   valueListenable: undoRedoStack.value._canRedo,
                   builder: (_, canRedo, __) {
                     return TextButton(
-                      onPressed:
-                          canRedo ? () => undoRedoStack.value.redo() : null,
+                      onPressed: canRedo ? () => undoRedoStack.value.redo() : null,
                       child: const Text('Redo'),
                     );
                   },
@@ -258,9 +201,7 @@ class CanvasSideBar extends HookWidget {
                     }
                   },
                   child: Text(
-                    backgroundImage.value == null
-                        ? 'Add Background'
-                        : 'Remove Background',
+                    backgroundImage.value == null ? 'Add Background' : 'Remove Background',
                   ),
                 ),
                 TextButton(
@@ -320,8 +261,7 @@ class CanvasSideBar extends HookWidget {
     if (kIsWeb) {
       html.AnchorElement()
         ..href = '${Uri.dataFromBytes(bytes, mimeType: 'image/$extension')}'
-        ..download =
-            'FlutterLetsDraw-${DateTime.now().toIso8601String()}.$extension'
+        ..download = 'FlutterLetsDraw-${DateTime.now().toIso8601String()}.$extension'
         ..style.display = 'none'
         ..click();
     } else {
@@ -343,9 +283,7 @@ class CanvasSideBar extends HookWidget {
       );
       if (file != null) {
         final filePath = file.files.single.path;
-        final bytes = filePath == null
-            ? file.files.first.bytes
-            : File(filePath).readAsBytesSync();
+        final bytes = filePath == null ? file.files.first.bytes : File(filePath).readAsBytesSync();
         if (bytes != null) {
           completer.complete(decodeImageFromList(bytes));
         } else {
@@ -381,8 +319,7 @@ class CanvasSideBar extends HookWidget {
   }
 
   Future<Uint8List?> getBytes() async {
-    RenderRepaintBoundary boundary = canvasGlobalKey.currentContext
-        ?.findRenderObject() as RenderRepaintBoundary;
+    RenderRepaintBoundary boundary = canvasGlobalKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
     ui.Image image = await boundary.toImage();
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     Uint8List? pngBytes = byteData?.buffer.asUint8List();

@@ -27,25 +27,13 @@ class Sketch {
       points: sketch.points,
       color: sketch.color,
       size: sketch.size,
-      filled: drawingMode == DrawingMode.line ||
-              drawingMode == DrawingMode.pencil ||
-              drawingMode == DrawingMode.eraser
-          ? false
-          : filled,
+      filled: drawingMode == DrawingMode.pencil || drawingMode == DrawingMode.eraser ? false : filled,
       sides: sketch.sides,
       type: () {
         switch (drawingMode) {
           case DrawingMode.eraser:
           case DrawingMode.pencil:
             return SketchType.scribble;
-          case DrawingMode.line:
-            return SketchType.line;
-          case DrawingMode.square:
-            return SketchType.square;
-          case DrawingMode.circle:
-            return SketchType.circle;
-          case DrawingMode.polygon:
-            return SketchType.polygon;
           default:
             return SketchType.scribble;
         }
@@ -66,8 +54,7 @@ class Sketch {
   }
 
   factory Sketch.fromJson(Map<String, dynamic> json) {
-    List<Offset> points =
-        (json['points'] as List).map((e) => Offset(e['dx'], e['dy'])).toList();
+    List<Offset> points = (json['points'] as List).map((e) => Offset(e['dx'], e['dy'])).toList();
     return Sketch(
       points: points,
       color: (json['color'] as String).toColor(),
@@ -86,8 +73,7 @@ extension SketchTypeX on SketchType {
 }
 
 extension SketchTypeExtension on String {
-  SketchType toSketchTypeEnum() =>
-      SketchType.values.firstWhere((e) => e.toString() == 'SketchType.$this');
+  SketchType toSketchTypeEnum() => SketchType.values.firstWhere((e) => e.toString() == 'SketchType.$this');
 }
 
 extension ColorExtension on String {
