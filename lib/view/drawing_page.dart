@@ -85,8 +85,7 @@ class DrawingPage extends HookWidget {
 class _CustomAppBar extends StatelessWidget {
   final AnimationController animationController;
 
-  const _CustomAppBar({Key? key, required this.animationController})
-      : super(key: key);
+  const _CustomAppBar({Key? key, required this.animationController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
